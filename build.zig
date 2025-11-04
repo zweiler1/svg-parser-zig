@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
     });
 
     const exe = b.addExecutable(.{
-        .name = "svg_parser_zig",
+        .name = "svg-parser-zig",
         .root_module = b.createModule(.{
             .root_source_file = b.path("src/main.zig"),
             .target = target,
@@ -19,6 +19,8 @@ pub fn build(b: *std.Build) void {
                 .{ .name = "svgp", .module = mod },
             },
         }),
+        .use_llvm = true,
+        .use_lld = true,
     });
     b.installArtifact(exe);
 

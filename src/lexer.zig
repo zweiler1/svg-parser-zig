@@ -1,17 +1,19 @@
 const std = @import("std");
 
-const TokenType = enum {
+pub const TokenType = enum {
     eof,
     lt,
     gt,
+    eq,
     slash,
     identifier,
     string,
     number,
     colon,
+    question,
 };
 
-const Token = struct {
+pub const Token = struct {
     type: TokenType,
     value: []const u8,
 };
@@ -56,7 +58,23 @@ pub fn tokenize(allocator: std.mem.Allocator, file: std.fs.File) ![]Token {
             std.debug.assert(i < input.len);
             continue :sw input[i];
         },
+        '=' => {
+            try tokens.append(allocator, Token{ .type = .eq, .value = input[i..(i + 1)] });
+            i += 1;
+            continue :sw input[i];
+        },
         '<' => {
+            if (i + 3 < input.len and input[i + 1] == '!' and input[i + 2] == '-' and input[i + 3] == '-') {
+                i += 4;
+                while (i + 2 < input.len and input[i] != '-' and input[i + 1] != '-' and input[i + 2] != '>') {
+                    i += 1;
+                }
+                i += 2;
+                if (i >= input.len) {
+                    return error.UnterminatedComment;
+                }
+                continue :sw input[i];
+            }
             try tokens.append(allocator, Token{ .type = .lt, .value = input[i..(i + 1)] });
             i += 1;
             continue :sw input[i];
@@ -73,6 +91,11 @@ pub fn tokenize(allocator: std.mem.Allocator, file: std.fs.File) ![]Token {
         },
         ':' => {
             try tokens.append(allocator, Token{ .type = .colon, .value = input[i..(i + 1)] });
+            i += 1;
+            continue :sw input[i];
+        },
+        '?' => {
+            try tokens.append(allocator, Token{ .type = .question, .value = input[i..(i + 1)] });
             i += 1;
             continue :sw input[i];
         },
