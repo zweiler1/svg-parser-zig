@@ -48,7 +48,9 @@ pub fn print(self: *const Self, level: usize) void {
         .path => |path| {
             std.debug.print("path {{\n", .{});
             indent(level + 1);
-            std.debug.print("paths: [{d} paths]\n", .{path.paths.len});
+            std.debug.print("start: {}\n", .{path.start});
+            indent(level + 1);
+            std.debug.print("commands: [{d} commands]\n", .{path.commands.len});
             indent(level);
             std.debug.print("}}\n", .{});
         },

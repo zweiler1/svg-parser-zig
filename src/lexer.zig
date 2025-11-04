@@ -18,8 +18,7 @@ pub const Token = struct {
     value: []const u8,
 };
 
-pub fn tokenize(allocator: std.mem.Allocator, file: std.fs.File) ![]Token {
-    const input = try file.readToEndAlloc(allocator, std.math.maxInt(usize));
+pub fn tokenize(allocator: std.mem.Allocator, input: []const u8) ![]Token {
     var tokens: std.ArrayList(Token) = .empty;
     var i: usize = 0;
 

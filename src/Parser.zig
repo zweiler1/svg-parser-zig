@@ -281,7 +281,8 @@ fn parseShape(self: *Self, allocator: std.mem.Allocator, tag_name: []const u8) !
         // Path parsing is complex, return empty paths for now
         return nodes.Node{
             .u = .{ .path = nodes.PathNode{
-                .paths = &[_]nodes.Path{},
+                .start = .{ .x = 0, .y = 0 },
+                .commands = &[_]nodes.PathCommand{},
             } },
             .style = style,
         };
